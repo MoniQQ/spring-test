@@ -39,16 +39,16 @@ public class VenueService {
     public void deleteVenueByName(String name) {
         Venue venue = getVenue(name);
 
-        List<Member> members = venue.getMembers();
-        List<Instrument> instruments = venue.getInstruments();
+       // List<Member> members = venue.getMembers();
+        // List<Instrument> instruments = venue.getInstruments();
 
-        memberRepository.deleteAll(members);
+        // memberRepository.deleteAll(members);
 
-        for (Instrument instrument : instruments) {
-            List<Venue> newVenues = instrument.getVenues().stream().filter(x -> !x.getName().equals(name)).toList();
-            instrument.setVenues(newVenues);
-            instrumentRepository.save(instrument);
-        }
+        // for (Instrument instrument : instruments) {
+        //     List<Venue> newVenues = instrument.getVenues().stream().filter(x -> !x.getName().equals(name)).toList();
+        //     instrument.setVenues(newVenues);
+        //     instrumentRepository.save(instrument);
+        // }
 
         venueRepository.delete(venue);
     }
@@ -57,10 +57,10 @@ public class VenueService {
         Venue venue = venueRepository.findByName(venueName);
         Member member = memberRepository.findByLegalName(memberName);
 
-        member.setVenue(venue);
+       // member.setVenue(venue);
 
-        List<Member> newMembers = venue.getMembers();
-        newMembers.add(member);
+       // List<Member> newMembers = venue.getMembers();
+       // newMembers.add(member);
 
         venueRepository.save(venue);
         return memberRepository.save(member);
@@ -72,11 +72,11 @@ public class VenueService {
 
     public void deleteMemberByName(String memberName) {
         Member member = memberRepository.findByLegalName(memberName);
-        Venue venue = member.getVenue();
+       // Venue venue = member.getVenue();
 
-        List<Member> newMembers = venue.getMembers();
-        newMembers.remove(member);
-        venueRepository.save(venue);
+      //  List<Member> newMembers = venue.getMembers();
+        //newMembers.remove(member);
+       // venueRepository.save(venue);
 
         memberRepository.delete(member);
     }
@@ -90,13 +90,13 @@ public class VenueService {
     }
 
     public void deleteInstrument(Instrument instrument) {
-        List<Venue> venues = instrument.getVenues();
+        // List<Venue> venues = instrument.getVenues();
 
-        venueRepository.saveAll(venues.stream().map(v -> {
-            List<Instrument> instruments = v.getInstruments().stream().filter(x -> !x.getISIN().equals(instrument.getISIN())).toList();
-            v.setInstruments(instruments);
-            return v;
-        }).toList());
+        // venueRepository.saveAll(venues.stream().map(v -> {
+        //     List<Instrument> instruments = v.getInstruments().stream().filter(x -> !x.getISIN().equals(instrument.getISIN())).toList();
+        //     v.setInstruments(instruments);
+        //     return v;
+        // }).toList());
 
         instrumentRepository.delete(instrument);
     }

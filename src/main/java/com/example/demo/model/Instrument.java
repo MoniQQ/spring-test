@@ -23,12 +23,12 @@ public class Instrument {
     private List<Venue> venues;
 
     public Instrument(Long id, String isin, Currency currency, InstrumentType type, String description, LocalDateTime effectiveDate, List<Venue> venues) {
-        ISIN = isin;
+        this.ISIN = isin;
         this.currency = currency;
         this.type = type;
         this.description = description;
         this.effectiveDate = effectiveDate;
-        this.venues = venues;
+       this.venues = venues;
     }
 
     public Instrument() {

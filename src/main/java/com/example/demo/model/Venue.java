@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,16 +33,18 @@ public class Venue {
         this.instruments = instruments;
     }
 
-    @OneToMany(mappedBy = "venue")
+    @OneToMany
     private List<Member> members;
 
-    @ManyToMany(mappedBy = "venues")
+    @ManyToMany
     private List<Instrument> instruments;
 
     public Venue(String name, String city, String country) {
         this.name = name;
         this.city = city;
         this.country = country;
+        this.members = new ArrayList<Member>();
+        this.instruments = new ArrayList<Instrument>();
     }
 
     public Venue() {
