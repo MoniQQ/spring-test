@@ -22,13 +22,13 @@ public class Instrument {
     @ManyToMany(mappedBy = "instruments")
     private List<Venue> venues;
 
-    public Instrument(Long id, String isin, Currency currency, InstrumentType type, String description, LocalDateTime effectiveDate, List<Venue> venues) {
-        this.ISIN = isin;
+    public Instrument(Long id, String ISIN, Currency currency, InstrumentType type, String description, LocalDateTime effectiveDate, List<Venue> venues) {
+        this.ISIN = ISIN;
         this.currency = currency;
         this.type = type;
         this.description = description;
         this.effectiveDate = effectiveDate;
-       this.venues = venues;
+        this.venues = venues;
     }
 
     public Instrument() {

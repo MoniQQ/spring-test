@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("venues")
+@RequestMapping("/venues")
 public class VenueController {
     private final VenueService venueService;
 
@@ -18,7 +18,7 @@ public class VenueController {
         this.venueService = venueService;
     }
 
-    @GetMapping("")
+    @GetMapping(value = "",  produces="application/json")
     public List<String> getVenues() {
         return venueService.getVenueNames();
     }
