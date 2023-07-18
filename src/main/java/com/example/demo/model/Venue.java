@@ -9,7 +9,7 @@ import java.util.List;
 public class Venue {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(unique = true)
@@ -38,6 +38,15 @@ public class Venue {
 
     @ManyToMany
     private List<Instrument> instruments;
+
+    public Venue(Long id, String name, String city, String country) {
+        this.id = id;
+        this.name = name;
+        this.city = city;
+        this.country = country;
+        this.members = new ArrayList<Member>();
+        this.instruments = new ArrayList<Instrument>();
+    }
 
     public Venue(String name, String city, String country) {
         this.name = name;

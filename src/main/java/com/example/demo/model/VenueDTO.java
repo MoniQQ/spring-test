@@ -1,39 +1,16 @@
 package com.example.demo.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data 
+@NoArgsConstructor
+@AllArgsConstructor
 public class VenueDTO {
-
-    public VenueDTO(String name, String city, String country) {
-        this.name = name;
-        this.city = city;
-        this.country = country;
-    }
-
+    
+    private Long id;
     private String name;
     private String city;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    private String country;
+    private String country;    
 }

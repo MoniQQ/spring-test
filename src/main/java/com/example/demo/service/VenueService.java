@@ -6,17 +6,20 @@ import com.example.demo.model.Venue;
 import com.example.demo.repository.InstrumentRepository;
 import com.example.demo.repository.MemberRepository;
 import com.example.demo.repository.VenueRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class VenueService {
-    private final InstrumentRepository instrumentRepository;
-    private final MemberRepository memberRepository;
-
-    private final VenueRepository venueRepository;
-
+    @Autowired
+    private InstrumentRepository instrumentRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private VenueRepository venueRepository;
 
     public VenueService(InstrumentRepository instrumentRepository, MemberRepository memberRepository, VenueRepository venueRepository) {
         this.instrumentRepository = instrumentRepository;
@@ -29,15 +32,27 @@ public class VenueService {
     }
 
     public Venue saveVenue(Venue venue) {
-        return venueRepository.save(venue);
+        Venue savedVenue = venueRepository.save(venue);
+        System.out.println(savedVenue.getId());
+        return savedVenue;
     }
 
-    public Venue getVenue(String name) {
+    public Venue getVenueByName(String name) {
         return venueRepository.findByName(name);
     }
 
+    public Venue updateVenueDetails(Venue venue) {
+        Venue oldVenue = venueRepository.findByName(venue.getName());
+        if (oldVenue == null) return null;
+        
+        venue.setInstruments(oldVenue.getInstruments());
+        venue.setMembers(oldVenue.getMembers());
+
+        return venueRepository.save(venue);
+    }
+ 
     public void deleteVenueByName(String name) {
-        Venue venue = getVenue(name);
+        Venue venue = getVenueByName(name);
 
         List<Member> members = venue.getMembers();
         List<Instrument> instruments = venue.getInstruments();
@@ -51,6 +66,10 @@ public class VenueService {
         }
 
         venueRepository.delete(venue);
+    }
+
+    public Member saveMember(Member member) {
+        return memberRepository.save(member);
     }
 
     public Member addMemberToVenueByName(String venueName, String memberName) {
@@ -100,4 +119,6 @@ public class VenueService {
 
         instrumentRepository.delete(instrument);
     }
+
+
 }
