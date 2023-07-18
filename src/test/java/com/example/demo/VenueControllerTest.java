@@ -121,7 +121,7 @@ class VenueControllerTest {
                         )
                 .andExpect(status().is(404));
 
-        when(venueService.getVenueByName(any(String.class))).thenReturn(venue);
+        when(venueService.updateVenueDetails(any(Venue.class))).thenReturn(venue);
 
         mockMvc.perform(put("/venues/update-venue-details")
                         .contentType(MediaType.APPLICATION_JSON)
