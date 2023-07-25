@@ -75,9 +75,7 @@ public class MemberController {
 
         List<Member> newMembers = venue.getMembers()
                                         .stream()
-                                        .filter(x -> 
-                                            !x.getLegalName().equals(member.getLegalName())
-                                            )
+                                        .filter(x -> areNamesEqual(x, member))
                                         .collect(Collectors.toList());
 
         // List<Member> newMembers = venue.getMembers();
