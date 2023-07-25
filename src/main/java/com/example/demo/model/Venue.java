@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +10,12 @@ import java.util.List;
 public class Venue {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
     private String name;
+    
     private String city;
     private String country;
 
@@ -33,10 +35,10 @@ public class Venue {
         this.instruments = instruments;
     }
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Member> members;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Instrument> instruments;
 
     public Venue(Long id, String name, String city, String country) {

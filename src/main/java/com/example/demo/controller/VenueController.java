@@ -41,7 +41,7 @@ public class VenueController {
     @PutMapping(value = "/update-venue-details", consumes="application/json")
     public Venue updateVenueDetails(@RequestBody VenueDTO venueDTO) {
         Venue updatedVenue = venueService.updateVenueDetails(Venue.of(venueDTO));
-        if (updatedVenue == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The venue identified by the given ID doesn't exist.");
+        if (updatedVenue == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The venue identified by the given name doesn't exist.");
         return updatedVenue;
     }
 

@@ -7,10 +7,13 @@ import com.example.demo.repository.InstrumentRepository;
 import com.example.demo.repository.MemberRepository;
 import com.example.demo.repository.VenueRepository;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VenueService {
@@ -28,12 +31,11 @@ public class VenueService {
     }
 
     public List<String> getVenueNames() {
-        return venueRepository.findAll().stream().map(Venue::getName).toList();
+        return venueRepository.findAll().stream().map(Venue::getName).collect(Collectors.toList());
     }
 
     public Venue saveVenue(Venue venue) {
         Venue savedVenue = venueRepository.save(venue);
-        System.out.println(savedVenue.getId());
         return savedVenue;
     }
 
@@ -60,7 +62,7 @@ public class VenueService {
         memberRepository.deleteAll(members);
 
         for (Instrument instrument : instruments) {
-            List<Venue> newVenues = instrument.getVenues().stream().filter(x -> !x.getName().equals(name)).toList();
+            List<Venue> newVenues = instrument.getVenues().stream().filter(x -> !x.getName().equals(name)).collect(Collectors.toList());
             instrument.setVenues(newVenues);
             instrumentRepository.save(instrument);
         }
@@ -120,10 +122,10 @@ public class VenueService {
         List<Venue> venues = instrument.getVenues();
 
         venueRepository.saveAll(venues.stream().map(v -> {
-            List<Instrument> instruments = v.getInstruments().stream().filter(x -> !x.getISIN().equals(instrument.getISIN())).toList();
+            List<Instrument> instruments = v.getInstruments().stream().filter(x -> !x.getISIN().equals(instrument.getISIN())).collect(Collectors.toList());
             v.setInstruments(instruments);
             return v;
-        }).toList());
+        }).collect(Collectors.toList()));
 
         instrumentRepository.delete(instrument);
     }

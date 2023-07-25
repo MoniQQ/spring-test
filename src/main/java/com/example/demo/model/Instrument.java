@@ -19,7 +19,7 @@ public class Instrument {
     private String description;
     private LocalDateTime effectiveDate;
 
-    @ManyToMany(mappedBy = "instruments")
+    @ManyToMany(mappedBy = "instruments", fetch = FetchType.EAGER)
     private List<Venue> venues;
 
     public Instrument(Long id, String ISIN, Currency currency, InstrumentType type, String description, LocalDateTime effectiveDate, List<Venue> venues) {

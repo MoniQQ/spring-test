@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hamcrest.Matchers;
@@ -44,7 +45,7 @@ class VenueControllerTest {
 
     @Test
     public void getVenueNamesTest() throws Exception {
-        List<String> fakeList = List.of("Venue A", "Venue B");
+        List<String> fakeList = Arrays.asList("Venue A", "Venue B");
 
         when(venueService.getVenueNames()).thenReturn(fakeList);
 
@@ -62,8 +63,6 @@ class VenueControllerTest {
         when(venueService.saveVenue(any(Venue.class))).thenReturn(venue);
 
         ObjectMapper mapper = new ObjectMapper();
-
-        System.out.println(mapper.writeValueAsString(dto));
 
         mockMvc.perform(post("/venues/create-venue")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -86,7 +85,6 @@ class VenueControllerTest {
         when(venueService.getVenueByName(eq("Venue A"))).thenReturn(venue);
 
         ObjectMapper mapper = new ObjectMapper();
-
 
         mockMvc.perform(get("/venues/get-venue")
                         .contentType(MediaType.APPLICATION_JSON)

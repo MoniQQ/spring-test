@@ -19,9 +19,7 @@ public class Member {
 
     private String address;
 
-
-
-    @ManyToOne(optional = true,  fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "venue_id", nullable = true)
     private Venue venue;
 
@@ -33,6 +31,7 @@ public class Member {
         this.address = address;
         this.venue = venue;
     }
+
     public Member() {
 
     }

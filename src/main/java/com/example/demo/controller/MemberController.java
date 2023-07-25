@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +22,7 @@ import com.example.demo.service.VenueService;
 @RestController
 @RequestMapping("members")
 public class MemberController {
+    
     private final VenueService venueService;
 
     public MemberController (VenueService venueService) {
@@ -67,11 +69,19 @@ public class MemberController {
         
         if (member == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The member identified by the given legal name doesn't exist.");
 
-        Venue venue = member.getVenue();
-
         venueService.deleteMemberByName(member.getLegalName());
 
-        List<Member> newMembers = venue.getMembers().stream().filter(x -> !x.getLegalName().equals(member.getLegalName())).toList();
+        Venue venue = member.getVenue();
+
+        List<Member> newMembers = venue.getMembers()
+                                        .stream()
+                                        .filter(x -> 
+                                            !x.getLegalName().equals(member.getLegalName())
+                                            )
+                                        .collect(Collectors.toList());
+
+        // List<Member> newMembers = venue.getMembers();
+        newMembers.remove(member);
 
         venue.setMembers(newMembers);
 
@@ -80,4 +90,7 @@ public class MemberController {
         return member;
     }
 
+    public foo areNamesEqual(Member first, Member second) {
+        return first.getLegalName().equals(second.getLegalName());
+    } 
 }
