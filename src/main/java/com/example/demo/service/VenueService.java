@@ -68,6 +68,14 @@ public class VenueService {
         venueRepository.delete(venue);
     }
 
+    public List<Member> getMembers() {
+        return memberRepository.findAll();
+    }
+
+    public Member getMemberByName(String legalName) {
+        return memberRepository.findByLegalName(legalName);
+    }
+
     public Member saveMember(Member member) {
         return memberRepository.save(member);
     }

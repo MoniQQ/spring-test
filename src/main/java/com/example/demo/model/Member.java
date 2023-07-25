@@ -31,10 +31,14 @@ public class Member {
         this.legalName = legalName;
         this.description = description;
         this.address = address;
+        this.venue = venue;
     }
-
     public Member() {
 
+    }
+
+    public static Member of(MemberDTO memberDTO) {
+        return new Member(memberDTO.getId(), memberDTO.getLei(), memberDTO.getLegalName(), memberDTO.getDescription(), memberDTO.getAddress(), memberDTO.getVenue());
     }
 
     public Venue getVenue() {

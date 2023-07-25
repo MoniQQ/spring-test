@@ -60,6 +60,10 @@ public class Venue {
 
     }
 
+    public static Venue of(VenueDTO venueDTO) {
+        return new Venue(venueDTO.getId(), venueDTO.getName(), venueDTO.getCity(), venueDTO.getCountry());
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
