@@ -73,12 +73,12 @@ public class MemberController {
 
         Venue venue = member.getVenue();
 
-        List<Member> newMembers = venue.getMembers()
-                                        .stream()
-                                        .filter(x -> areNamesEqual(x, member))
-                                        .collect(Collectors.toList());
+        // List<Member> newMembers = venue.getMembers()
+        //                                 .stream()
+        //                                 .filter(x -> areNamesEqual(x, member))
+        //                                 .collect(Collectors.toList());
 
-        // List<Member> newMembers = venue.getMembers();
+        List<Member> newMembers = venue.getMembers();
         newMembers.remove(member);
 
         venue.setMembers(newMembers);
@@ -88,7 +88,9 @@ public class MemberController {
         return member;
     }
 
-    public foo areNamesEqual(Member first, Member second) {
-        return first.getLegalName().equals(second.getLegalName());
-    } 
+    
+
+    // public foo areNamesEqual(Member first, Member second) {
+    //     return first.getLegalName().equals(second.getLegalName());
+    // } 
 }

@@ -47,19 +47,13 @@ public class VenueService {
         Venue oldVenue = venueRepository.findByName(venue.getName());
         if (oldVenue == null) return null;
         
-        venue.setInstruments(oldVenue.getInstruments());
-        venue.setMembers(oldVenue.getMembers());
-
         return venueRepository.save(venue);
     }
  
     public void deleteVenueByName(String name) {
         Venue venue = getVenueByName(name);
 
-        List<Member> members = venue.getMembers();
         List<Instrument> instruments = venue.getInstruments();
-
-        memberRepository.deleteAll(members);
 
         for (Instrument instrument : instruments) {
             List<Venue> newVenues = instrument.getVenues().stream().filter(x -> !x.getName().equals(name)).collect(Collectors.toList());
@@ -86,10 +80,7 @@ public class VenueService {
         Venue venue = venueRepository.findByName(venueName);
         Member member = memberRepository.findByLegalName(memberName);
 
-       member.setVenue(venue);
-
-       List<Member> newMembers = venue.getMembers();
-       newMembers.add(member);
+        member.setVenue(venue);
 
         venueRepository.save(venue);
         return memberRepository.save(member);
@@ -102,10 +93,6 @@ public class VenueService {
     public void deleteMemberByName(String memberName) {
         Member member = memberRepository.findByLegalName(memberName);
         Venue venue = member.getVenue();
-
-        List<Member> newMembers = venue.getMembers();
-        newMembers.remove(member);
-        venueRepository.save(venue);
 
         memberRepository.delete(member);
     }
@@ -129,6 +116,5 @@ public class VenueService {
 
         instrumentRepository.delete(instrument);
     }
-
 
 }

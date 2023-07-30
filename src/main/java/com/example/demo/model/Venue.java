@@ -1,9 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,14 +17,6 @@ public class Venue {
     private String city;
     private String country;
 
-    public List<Member> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<Member> members) {
-        this.members = members;
-    }
-
     public List<Instrument> getInstruments() {
         return instruments;
     }
@@ -35,10 +25,7 @@ public class Venue {
         this.instruments = instruments;
     }
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Member> members;
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private List<Instrument> instruments;
 
     public Venue(Long id, String name, String city, String country) {
@@ -46,16 +33,12 @@ public class Venue {
         this.name = name;
         this.city = city;
         this.country = country;
-        this.members = new ArrayList<Member>();
-        this.instruments = new ArrayList<Instrument>();
     }
 
     public Venue(String name, String city, String country) {
         this.name = name;
         this.city = city;
         this.country = country;
-        this.members = new ArrayList<Member>();
-        this.instruments = new ArrayList<Instrument>();
     }
 
     public Venue() {
