@@ -58,8 +58,6 @@ public class MemberController {
 
         memberDTO.setVenue(venue);
 
-        // TODO : save member in venue and test
-
         return venueService.saveMember(Member.of(memberDTO));
     }
 
@@ -71,26 +69,6 @@ public class MemberController {
 
         venueService.deleteMemberByName(member.getLegalName());
 
-        Venue venue = member.getVenue();
-
-        // List<Member> newMembers = venue.getMembers()
-        //                                 .stream()
-        //                                 .filter(x -> areNamesEqual(x, member))
-        //                                 .collect(Collectors.toList());
-
-        List<Member> newMembers = venue.getMembers();
-        newMembers.remove(member);
-
-        venue.setMembers(newMembers);
-
-        venueService.updateVenueDetails(venue);
-
         return member;
     }
-
-    
-
-    // public foo areNamesEqual(Member first, Member second) {
-    //     return first.getLegalName().equals(second.getLegalName());
-    // } 
 }
