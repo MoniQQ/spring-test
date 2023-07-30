@@ -6,9 +6,8 @@ import com.example.demo.model.Venue;
 import com.example.demo.repository.InstrumentRepository;
 import com.example.demo.repository.MemberRepository;
 import com.example.demo.repository.VenueRepository;
-
-import jakarta.transaction.Transactional;
-
+import com.example.demo.service.exception.MemberNotFoundException;
+import com.example.demo.service.exception.VenueNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,19 +34,21 @@ public class VenueService {
     }
 
     public Venue saveVenue(Venue venue) {
-        Venue savedVenue = venueRepository.save(venue);
-        return savedVenue;
+        return venueRepository.save(venue);
+    }
+
+    public Venue getVenueById(Long id) {
+        return venueRepository.findById(id).orElseThrow(VenueNotFoundException::new);
     }
 
     public Venue getVenueByName(String name) {
-        return venueRepository.findByName(name);
+        return venueRepository.findByName(name).orElseThrow(VenueNotFoundException::new);
     }
 
     public Venue updateVenueDetails(Venue venue) {
-        Venue oldVenue = venueRepository.findByName(venue.getName());
-        if (oldVenue == null) return null;
-        
-        return venueRepository.save(venue);
+        return venueRepository.save(
+                getVenueById(venue.getId())
+        );
     }
  
     public void deleteVenueByName(String name) {
@@ -69,7 +70,11 @@ public class VenueService {
     }
 
     public Member getMemberByName(String legalName) {
-        return memberRepository.findByLegalName(legalName);
+        return memberRepository.findByLegalName(legalName).orElseThrow(MemberNotFoundException::new);
+    }
+
+    public Member getMemberById(Long id) {
+        return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
     public Member saveMember(Member member) {
@@ -77,22 +82,20 @@ public class VenueService {
     }
 
     public Member addMemberToVenueByName(String venueName, String memberName) {
-        Venue venue = venueRepository.findByName(venueName);
-        Member member = memberRepository.findByLegalName(memberName);
+        Member member = getMemberByName(memberName);
+        Venue venue = getVenueByName(venueName);
 
-        member.setVenue(venue);
-
-        venueRepository.save(venue);
         return memberRepository.save(member);
     }
 
     public Member updateMember(Member member) {
-        return memberRepository.save(member);
+        return memberRepository.save(
+                getMemberById(member.getId())
+        );
     }
 
     public void deleteMemberByName(String memberName) {
-        Member member = memberRepository.findByLegalName(memberName);
-        Venue venue = member.getVenue();
+        Member member = getMemberByName(memberName);
 
         memberRepository.delete(member);
     }

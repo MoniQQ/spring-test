@@ -27,8 +27,7 @@ public class VenueController {
     @PostMapping("/create-venue")
     public Venue createVenue(@RequestBody VenueDTO venueDTO) {
         Venue venue = Venue.of(venueDTO);
-        Venue savedVenue = venueService.saveVenue(venue);
-        return savedVenue;
+        return venueService.saveVenue(venue);
     }
 
     @GetMapping("/get-venue")
