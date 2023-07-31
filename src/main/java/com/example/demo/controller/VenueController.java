@@ -1,11 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Venue;
-import com.example.demo.model.VenueDTO;
+import com.example.demo.dto.VenueDTO;
 import com.example.demo.service.VenueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,30 +17,32 @@ public class VenueController {
         this.venueService = venueService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public List<String> getVenues() {
         return venueService.getVenueNames();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/create-venue")
+    @PostMapping
     public Venue createVenue(@RequestBody VenueDTO venueDTO) {
         Venue venue = Venue.of(venueDTO);
-        return venueService.saveVenue(venue);
+        return venueService.createVenue(venue);
     }
 
-    @GetMapping("/get-venue")
-    public Venue getVenue(@RequestBody VenueDTO venueDTO) {
-        Venue venue = venueService.getVenueByName(venueDTO.getName());
-        if (venue == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The venue identified by the given name doesn't exist.");
-        return venue;
+    @GetMapping("/{id}")
+    public Venue getVenue(@PathVariable long id) {
+        return venueService.getVenueById(id);
     }
 
-    @PutMapping(value = "/update-venue-details", consumes="application/json")
-    public Venue updateVenueDetails(@RequestBody VenueDTO venueDTO) {
-        Venue updatedVenue = venueService.updateVenueDetails(Venue.of(venueDTO));
-        if (updatedVenue == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The venue identified by the given name doesn't exist.");
-        return updatedVenue;
+    @PutMapping(value = "/{id}", consumes="application/json")
+    public Venue updateVenue(@RequestBody VenueDTO venueDTO, @PathVariable long id) {
+        venueDTO.setId(id);
+        return venueService.updateVenue(Venue.of(venueDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public Venue deleteVenue(@PathVariable long id) {
+        return venueService.deleteVenueById(id);
     }
 
 }

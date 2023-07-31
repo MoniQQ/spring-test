@@ -51,8 +51,6 @@ public class MemberControllerIntegrationTest {
     @Autowired 
     private JdbcTemplate jdbcTemplate;
 
- 
-    //@Transactional
     @BeforeEach
     public void dbSetup() {
         Venue venue = new Venue("Test venue", "Test city", "Test country");
@@ -60,40 +58,28 @@ public class MemberControllerIntegrationTest {
         Member member1 = new Member(null, "LEI-1", "Rino", "desc", "address 1-a", venue);
         Member member2 = new Member(null, "LEI-2", "ff", "", "address-f-f", venue);
 
-        venueService.saveVenue(venue);
-        venueService.saveMember(member1);
-        venueService.saveMember(member2);
-        
-        venueService.saveVenue(venue);
-
-        // System.out.println(venueService.getVenueByName("Test venue").getMembers());
-
-        // System.out.println(venueService.getVenueByName("Test venue").getMembers().stream().map(x -> x.getLegalName()).collect(Collectors.toList()));
+        venueService.createVenue(venue);
+        venueService.createMember(member1);
+        venueService.createMember(member2);
     }
 
     @AfterEach
     public void dbCleanup() {
-        //jdbcTemplate.execute("truncate table venue");
-        jdbcTemplate.execute("truncate table member");
+        //jdbcTemplate.batchUpdate()
+        jdbcTemplate.execute("set REFERENTIAL_INTEGRITY false");
+        jdbcTemplate.execute("truncate table MEMBERS");
+        jdbcTemplate.execute("truncate table VENUES");
+        jdbcTemplate.execute("truncate table INSTRUMENTS");
+        jdbcTemplate.execute("truncate table ISSUERS");
+        jdbcTemplate.execute("set REFERENTIAL_INTEGRITY true");
     }
 
-    // @AfterEach
-    // public void dbCleanup() {
-    //     venueService.truncateMemberRepository();
-    //     venueService.truncateVenueRepository();
-    // }
 
     @Test 
     public void getVenueMembersTest() throws Exception {
-        //assertEquals(venueService.getVenueByName("Test venue").getMembers().size(), 2);
-
         mockMvc.perform(get("/venues"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.containsInAnyOrder("Test venue")));
+                .andExpect(jsonPath("$", Matchers.contains("Test venue")));
     }
-
-   
-
-
 }

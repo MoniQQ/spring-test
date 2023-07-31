@@ -1,8 +1,10 @@
 package com.example.demo.model;
 
+import com.example.demo.dto.MemberDTO;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "MEMBERS")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +37,8 @@ public class Member {
 
     }
 
-    public static Member of(MemberDTO memberDTO) {
-        return new Member(memberDTO.getId(), memberDTO.getLei(), memberDTO.getLegalName(), memberDTO.getDescription(), memberDTO.getAddress(), memberDTO.getVenue());
+    public static Member of(Long id, MemberDTO memberDTO, Venue venue) {
+        return new Member(id, memberDTO.getLei(), memberDTO.getLegalName(), memberDTO.getDescription(), memberDTO.getAddress(), venue);
     }
 
     public Venue getVenue() {

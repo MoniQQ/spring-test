@@ -1,5 +1,6 @@
-package com.example.demo.model;
+package com.example.demo.dto;
 
+import com.example.demo.model.Venue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberDTO {
-    private Long id;
-
     private String lei;
 
     private String legalName;

@@ -1,10 +1,12 @@
 package com.example.demo.model;
 
+import com.example.demo.dto.VenueDTO;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
+@Table(name = "VENUES")
 public class Venue {
 
     @Id

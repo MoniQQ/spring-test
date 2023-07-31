@@ -6,7 +6,9 @@ import com.example.demo.model.Venue;
 import com.example.demo.repository.InstrumentRepository;
 import com.example.demo.repository.MemberRepository;
 import com.example.demo.repository.VenueRepository;
+import com.example.demo.service.exception.MemberAlreadyExistsException;
 import com.example.demo.service.exception.MemberNotFoundException;
+import com.example.demo.service.exception.VenueAlreadyExistsException;
 import com.example.demo.service.exception.VenueNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,9 @@ public class VenueService {
         return venueRepository.findAll().stream().map(Venue::getName).collect(Collectors.toList());
     }
 
-    public Venue saveVenue(Venue venue) {
+    public Venue createVenue(Venue venue) {
+        if (venue.getId() != null) throw new VenueAlreadyExistsException();
+
         return venueRepository.save(venue);
     }
 
@@ -45,24 +49,17 @@ public class VenueService {
         return venueRepository.findByName(name).orElseThrow(VenueNotFoundException::new);
     }
 
-    public Venue updateVenueDetails(Venue venue) {
+    public Venue updateVenue(Venue venue) {
         return venueRepository.save(
                 getVenueById(venue.getId())
         );
     }
  
-    public void deleteVenueByName(String name) {
-        Venue venue = getVenueByName(name);
-
-        List<Instrument> instruments = venue.getInstruments();
-
-        for (Instrument instrument : instruments) {
-            List<Venue> newVenues = instrument.getVenues().stream().filter(x -> !x.getName().equals(name)).collect(Collectors.toList());
-            instrument.setVenues(newVenues);
-            instrumentRepository.save(instrument);
-        }
-
+    public Venue deleteVenueById(Long id) {
+        Venue venue = getVenueById(id);
         venueRepository.delete(venue);
+
+        return venue;
     }
 
     public List<Member> getMembers() {
@@ -77,7 +74,9 @@ public class VenueService {
         return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
-    public Member saveMember(Member member) {
+    public Member createMember(Member member) {
+        if (member.getId() != null) throw new MemberAlreadyExistsException();
+
         return memberRepository.save(member);
     }
 
@@ -94,10 +93,12 @@ public class VenueService {
         );
     }
 
-    public void deleteMemberByName(String memberName) {
-        Member member = getMemberByName(memberName);
+    public Member deleteMemberById(Long id) {
+        Member member = getMemberById(id);
 
         memberRepository.delete(member);
+
+        return member;
     }
 
     public Instrument saveInstrument(Instrument instrument) {
@@ -109,15 +110,6 @@ public class VenueService {
     }
 
     public void deleteInstrument(Instrument instrument) {
-        List<Venue> venues = instrument.getVenues();
-
-        venueRepository.saveAll(venues.stream().map(v -> {
-            List<Instrument> instruments = v.getInstruments().stream().filter(x -> !x.getISIN().equals(instrument.getISIN())).collect(Collectors.toList());
-            v.setInstruments(instruments);
-            return v;
-        }).collect(Collectors.toList()));
-
         instrumentRepository.delete(instrument);
     }
-
 }

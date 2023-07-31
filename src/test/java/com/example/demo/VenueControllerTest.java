@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 
+import com.example.demo.service.exception.VenueNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.example.demo.controller.VenueController;
 import com.example.demo.model.Venue;
-import com.example.demo.model.VenueDTO;
+import com.example.demo.dto.VenueDTO;
 import com.example.demo.service.VenueService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -60,11 +61,11 @@ class VenueControllerTest {
         Venue venue = new Venue(null, "Venue A", "City A", "Uzbekistan");
         VenueDTO dto = new VenueDTO(null, "Venue A", "City A", "Uzbekistan");
 
-        when(venueService.saveVenue(any(Venue.class))).thenReturn(venue);
+        when(venueService.createVenue(any(Venue.class))).thenReturn(venue);
 
         ObjectMapper mapper = new ObjectMapper();
 
-        mockMvc.perform(post("/venues/create-venue")
+        mockMvc.perform(post("/venues")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto))
                         .characterEncoding("utf-8")
@@ -79,14 +80,14 @@ class VenueControllerTest {
 
     @Test
     public void getVenueTest() throws Exception {
-        Venue venue = new Venue(null, "Venue A", "City A", "Uzbekistan");
-        VenueDTO dto = new VenueDTO(null, "Venue A", "City A", "Uzbekistan");
+        Venue venue = new Venue(15L, "Venue A", "City A", "Uzbekistan");
+        VenueDTO dto = new VenueDTO(15L, "Venue A", "City A", "Uzbekistan");
 
-        when(venueService.getVenueByName(eq("Venue A"))).thenReturn(venue);
+        when(venueService.getVenueById(eq(15L))).thenReturn(venue);
 
         ObjectMapper mapper = new ObjectMapper();
 
-        mockMvc.perform(get("/venues/get-venue")
+        mockMvc.perform(get("/venues/15")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto))
                         .characterEncoding("utf-8")
@@ -100,23 +101,23 @@ class VenueControllerTest {
 
     @Test
     public void updateVenueDetailsTest() throws Exception {
-        Venue venue = new Venue(null, "Venue A", "City A", "Uzbekistan");
-        VenueDTO dto = new VenueDTO(null, "Venue A", "City A", "Uzbekistan");
+        Venue venue = new Venue(15L, "Venue A", "City A", "Uzbekistan");
+        VenueDTO dto = new VenueDTO(15L, "Venue A", "City A", "Uzbekistan");
 
-        when(venueService.updateVenueDetails(any(Venue.class))).thenReturn(null);
+        when(venueService.updateVenue(any(Venue.class))).thenThrow(new VenueNotFoundException());
 
         ObjectMapper mapper = new ObjectMapper();
 
-        mockMvc.perform(put("/venues/update-venue-details")
+        mockMvc.perform(put("/venues/15")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto))
                         .characterEncoding("utf-8")
                         )
                 .andExpect(status().is(404));
 
-        when(venueService.updateVenueDetails(any(Venue.class))).thenReturn(venue);
+        when(venueService.updateVenue(any(Venue.class))).thenReturn(venue);
 
-        mockMvc.perform(put("/venues/update-venue-details")
+        mockMvc.perform(put("/venues/15")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto))
                         .characterEncoding("utf-8")
