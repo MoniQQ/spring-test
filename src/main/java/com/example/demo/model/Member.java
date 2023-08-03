@@ -14,7 +14,7 @@ public class Member {
     private String lei;
 
     @Column(unique = true)
-    private String legalName;
+    private String name;
 
     private String description;
 
@@ -24,10 +24,10 @@ public class Member {
     @JoinColumn(name = "venue_id", nullable = true)
     private Venue venue;
 
-    public Member(Long id, String lei, String legalName, String description, String address, Venue venue) {
+    public Member(Long id, String lei, String name, String description, String address, Venue venue) {
         this.id = id;
         this.lei = lei;
-        this.legalName = legalName;
+        this.name = name;
         this.description = description;
         this.address = address;
         this.venue = venue;
@@ -38,7 +38,7 @@ public class Member {
     }
 
     public static Member of(Long id, MemberDTO memberDTO, Venue venue) {
-        return new Member(id, memberDTO.getLei(), memberDTO.getLegalName(), memberDTO.getDescription(), memberDTO.getAddress(), venue);
+        return new Member(id, memberDTO.getLei(), memberDTO.getName(), memberDTO.getDescription(), memberDTO.getAddress(), venue);
     }
 
     public Venue getVenue() {
@@ -57,12 +57,12 @@ public class Member {
         this.lei = lei;
     }
 
-    public String getLegalName() {
-        return legalName;
+    public String getname() {
+        return name;
     }
 
-    public void setLegalName(String legalName) {
-        this.legalName = legalName;
+    public void setname(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

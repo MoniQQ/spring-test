@@ -11,13 +11,11 @@ import lombok.NoArgsConstructor;
 public class MemberDTO {
     private String lei;
 
-    private String legalName;
+    private String name;
 
     private String description;
 
     private String address;
 
     private String venueName;
-    
-    private Venue venue;
 }

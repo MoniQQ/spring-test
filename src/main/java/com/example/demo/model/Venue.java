@@ -48,7 +48,15 @@ public class Venue {
     }
 
     public static Venue of(VenueDTO venueDTO) {
-        return new Venue(venueDTO.getId(), venueDTO.getName(), venueDTO.getCity(), venueDTO.getCountry());
+        return new Venue(venueDTO.getName(), venueDTO.getCity(), venueDTO.getCountry());
+    }
+
+    public static Venue of(Long id, VenueDTO venueDTO) {
+        return new Venue(id, venueDTO.getName(), venueDTO.getCity(), venueDTO.getCountry());
+    }
+
+    public static VenueDTO dto(Venue venue) {
+        return new VenueDTO(venue.getName(), venue.getCity(), venue.getCountry(), venue.getId());
     }
 
     public void setId(Long id) {

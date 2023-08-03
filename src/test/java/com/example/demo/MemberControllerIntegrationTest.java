@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.demo.dto.MemberDTO;
+import com.example.demo.dto.VenueDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.annotation.After;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
@@ -20,9 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,13 +48,13 @@ public class MemberControllerIntegrationTest {
     private VenueService venueService;
 
     @Autowired
-    private MemberController memberController;
-
-    @Autowired
     private MockMvc mockMvc;
 
     @Autowired 
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void dbSetup() {
@@ -78,8 +83,40 @@ public class MemberControllerIntegrationTest {
     @Test 
     public void getVenueMembersTest() throws Exception {
         mockMvc.perform(get("/venues"))
-                .andDo(print())
+                //.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.contains("Test venue")));
+    }
+
+    @Test
+    public void addVenueWithMembersTest() throws Exception {
+        VenueDTO venueDTO = new VenueDTO("My venue", "My city", "My country", null);
+
+        MvcResult result1 = mockMvc.perform(
+                    post("/venues")
+                            .content(objectMapper.writeValueAsString(venueDTO))
+                            .contentType(MediaType.APPLICATION_JSON))
+                //.andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("My venue"))
+                .andExpect(jsonPath("$.city").value("My city"))
+                .andExpect(jsonPath("$.country").value("My country"))
+                .andReturn();
+
+        Venue createdVenue = objectMapper.readValue(result1.getResponse().getContentAsString(), Venue.class);
+
+        Long id = createdVenue.getId();
+
+        MemberDTO memberDTO = new MemberDTO("LEI-0000", "Scrooge McDuck", "", "", "My venue");
+
+        MvcResult result2 = mockMvc.perform(
+                post("/members")
+                        .content(objectMapper.writeValueAsString(memberDTO))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.lei").value("LEI-0000"))
+                .andExpect(jsonPath("$.name").value("Scrooge McDuck"))
+                .andExpect(jsonPath("$.venue.name").value("My venue"))
+                .andReturn();
     }
 }

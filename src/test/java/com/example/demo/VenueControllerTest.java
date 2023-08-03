@@ -59,7 +59,7 @@ class VenueControllerTest {
     @Test
     public void createVenueTest() throws Exception {
         Venue venue = new Venue(null, "Venue A", "City A", "Uzbekistan");
-        VenueDTO dto = new VenueDTO(null, "Venue A", "City A", "Uzbekistan");
+        VenueDTO dto = new VenueDTO("Venue A", "City A", "Uzbekistan", null);
 
         when(venueService.createVenue(any(Venue.class))).thenReturn(venue);
 
@@ -81,7 +81,7 @@ class VenueControllerTest {
     @Test
     public void getVenueTest() throws Exception {
         Venue venue = new Venue(15L, "Venue A", "City A", "Uzbekistan");
-        VenueDTO dto = new VenueDTO(15L, "Venue A", "City A", "Uzbekistan");
+        VenueDTO dto = new VenueDTO("Venue A", "City A", "Uzbekistan", null);
 
         when(venueService.getVenueById(eq(15L))).thenReturn(venue);
 
@@ -102,7 +102,7 @@ class VenueControllerTest {
     @Test
     public void updateVenueDetailsTest() throws Exception {
         Venue venue = new Venue(15L, "Venue A", "City A", "Uzbekistan");
-        VenueDTO dto = new VenueDTO(15L, "Venue A", "City A", "Uzbekistan");
+        VenueDTO dto = new VenueDTO("Venue A", "City A", "Uzbekistan", null);
 
         when(venueService.updateVenue(any(Venue.class))).thenThrow(new VenueNotFoundException());
 

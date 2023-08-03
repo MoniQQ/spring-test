@@ -31,12 +31,16 @@ public class VenueService {
         this.venueRepository = venueRepository;
     }
 
+    public List<Venue> getVenues() {
+        return venueRepository.findAll();
+    }
+
     public List<String> getVenueNames() {
-        return venueRepository.findAll().stream().map(Venue::getName).collect(Collectors.toList());
+        return getVenues().stream().map(Venue::getName).collect(Collectors.toList());
     }
 
     public Venue createVenue(Venue venue) {
-        if (venue.getId() != null) throw new VenueAlreadyExistsException();
+        if (venueRepository.existsByName(venue.getName())) throw new VenueAlreadyExistsException();
 
         return venueRepository.save(venue);
     }
@@ -66,8 +70,8 @@ public class VenueService {
         return memberRepository.findAll();
     }
 
-    public Member getMemberByName(String legalName) {
-        return memberRepository.findByLegalName(legalName).orElseThrow(MemberNotFoundException::new);
+    public Member getMemberByName(String name) {
+        return memberRepository.findByname(name).orElseThrow(MemberNotFoundException::new);
     }
 
     public Member getMemberById(Long id) {
