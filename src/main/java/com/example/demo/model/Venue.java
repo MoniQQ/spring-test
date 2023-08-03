@@ -19,15 +19,8 @@ public class Venue {
     private String city;
     private String country;
 
-    public List<Instrument> getInstruments() {
-        return instruments;
-    }
 
-    public void setInstruments(List<Instrument> instruments) {
-        this.instruments = instruments;
-    }
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Instrument> instruments;
 
     public Venue(Long id, String name, String city, String country) {
@@ -45,6 +38,13 @@ public class Venue {
 
     public Venue() {
 
+    }
+
+    public void updateFields(Venue venue) {
+        this.name = venue.getName();
+        this.city = venue.getCity();
+        this.country = venue.getCountry();
+        this.instruments = venue.getInstruments();
     }
 
     public static Venue of(VenueDTO venueDTO) {
@@ -66,6 +66,15 @@ public class Venue {
     public Long getId() {
         return id;
     }
+
+    public List<Instrument> getInstruments() {
+        return instruments;
+    }
+
+    public void setInstruments(List<Instrument> instruments) {
+        this.instruments = instruments;
+    }
+
 
     public String getCountry() {
         return country;

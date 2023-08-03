@@ -1,11 +1,16 @@
 package com.example.demo.service.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class VenueNotFoundException extends RuntimeException {
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+@ResponseStatus(NOT_FOUND)
+@ResponseBody
+public class VenueNotFoundException extends ResponseStatusException {
     public VenueNotFoundException() {
-        super("Venue not found.");
+        super(NOT_FOUND, "Venue not found.");
     }
 }

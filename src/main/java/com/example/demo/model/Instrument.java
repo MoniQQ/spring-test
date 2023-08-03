@@ -20,7 +20,7 @@ public class Instrument {
     private String description;
     private LocalDateTime effectiveDate;
 
-    @ManyToMany(mappedBy = "instruments", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "instruments", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Venue> venues;
 
     public Instrument(Long id, String ISIN, Currency currency, InstrumentType type, String description, LocalDateTime effectiveDate, List<Venue> venues) {
@@ -44,6 +44,14 @@ public class Instrument {
         this.venues = venues;
     }
 
+    public void updateFields(Instrument instrument) {
+        this.ISIN = instrument.getISIN();
+        this.type = instrument.getType();
+        this.currency = instrument.getCurrency();
+        this.effectiveDate = instrument.getEffectiveDate();
+        this.venues = instrument.getVenues();
+        this.description = instrument.getDescription();
+    }
 
     public void setId(Long id) {
         this.id = id;

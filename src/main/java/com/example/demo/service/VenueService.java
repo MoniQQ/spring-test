@@ -6,9 +6,8 @@ import com.example.demo.model.Venue;
 import com.example.demo.repository.InstrumentRepository;
 import com.example.demo.repository.MemberRepository;
 import com.example.demo.repository.VenueRepository;
-import com.example.demo.service.exception.MemberAlreadyExistsException;
+import com.example.demo.service.exception.AlreadyExistsException;
 import com.example.demo.service.exception.MemberNotFoundException;
-import com.example.demo.service.exception.VenueAlreadyExistsException;
 import com.example.demo.service.exception.VenueNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,7 @@ public class VenueService {
     }
 
     public Venue createVenue(Venue venue) {
-        if (venueRepository.existsByName(venue.getName())) throw new VenueAlreadyExistsException();
+        if (venueRepository.existsByName(venue.getName())) throw new AlreadyExistsException(venue);
 
         return venueRepository.save(venue);
     }
@@ -54,9 +53,11 @@ public class VenueService {
     }
 
     public Venue updateVenue(Venue venue) {
-        return venueRepository.save(
-                getVenueById(venue.getId())
-        );
+        Venue existingVenue = getVenueById(venue.getId());
+
+        existingVenue.updateFields(venue);
+
+        return venueRepository.save(existingVenue);
     }
  
     public Venue deleteVenueById(Long id) {
@@ -70,8 +71,10 @@ public class VenueService {
         return memberRepository.findAll();
     }
 
-    public Member getMemberByName(String name) {
-        return memberRepository.findByname(name).orElseThrow(MemberNotFoundException::new);
+    public List<Member> getVenueMembers(Long id) {
+        String venueName = getVenueById(id).getName();
+
+        return getMembers().stream().filter(x -> x.getVenueName().equals(venueName)).collect(Collectors.toList());
     }
 
     public Member getMemberById(Long id) {
@@ -79,22 +82,17 @@ public class VenueService {
     }
 
     public Member createMember(Member member) {
-        if (member.getId() != null) throw new MemberAlreadyExistsException();
-
-        return memberRepository.save(member);
-    }
-
-    public Member addMemberToVenueByName(String venueName, String memberName) {
-        Member member = getMemberByName(memberName);
-        Venue venue = getVenueByName(venueName);
+        if (memberRepository.existsByLei(member.getLei())) throw new AlreadyExistsException(member);
 
         return memberRepository.save(member);
     }
 
     public Member updateMember(Member member) {
-        return memberRepository.save(
-                getMemberById(member.getId())
-        );
+        Member existingMember = getMemberById(member.getId());
+
+        existingMember.updateFields(member);
+
+        return memberRepository.save(existingMember);
     }
 
     public Member deleteMemberById(Long id) {
@@ -105,15 +103,29 @@ public class VenueService {
         return member;
     }
 
-    public Instrument saveInstrument(Instrument instrument) {
+    public Instrument getInstrumentById(Long id) {
+        return instrumentRepository.findById(id).orElseThrow();
+    }
+
+    public Instrument createInstrument(Instrument instrument) {
+        if (instrumentRepository.existsByISIN(instrument.getISIN())) throw new AlreadyExistsException(instrument);
+
         return instrumentRepository.save(instrument);
     }
 
     public Instrument updateInstrument(Instrument instrument) {
+        Instrument existingInstrument = getInstrumentById(instrument.getId());
+
+        existingInstrument.updateFields(instrument);
+
         return instrumentRepository.save(instrument);
     }
 
-    public void deleteInstrument(Instrument instrument) {
+    public Instrument deleteInstrumentById(Long id) {
+        Instrument instrument = getInstrumentById(id);
+
         instrumentRepository.delete(instrument);
+
+        return instrument;
     }
 }

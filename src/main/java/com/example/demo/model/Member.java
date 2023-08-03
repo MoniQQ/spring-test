@@ -37,12 +37,28 @@ public class Member {
 
     }
 
+    public void updateFields(Member member) {
+        this.lei = member.getLei();
+        this.name = member.getName();
+        this.description = member.getDescription();
+        this.address = member.getAddress();
+        this.venue = member.getVenue();
+    }
+
     public static Member of(Long id, MemberDTO memberDTO, Venue venue) {
         return new Member(id, memberDTO.getLei(), memberDTO.getName(), memberDTO.getDescription(), memberDTO.getAddress(), venue);
     }
 
+    public static MemberDTO dto(Member member) {
+        return new MemberDTO(member.lei, member.name, member.description, member.address, member.getVenueName());
+    }
+
     public Venue getVenue() {
         return venue;
+    }
+
+    public String getVenueName() {
+        return this.venue == null ? null : this.venue.getName();
     }
 
     public void setVenue(Venue venue) {
@@ -57,11 +73,11 @@ public class Member {
         this.lei = lei;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 
-    public void setname(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

@@ -1,12 +1,16 @@
 package com.example.demo.service.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-public class MemberNotFoundException extends RuntimeException {
+@ResponseStatus(NOT_FOUND)
+@ResponseBody
+public class MemberNotFoundException extends ResponseStatusException {
     public MemberNotFoundException() {
-        super("Member not found.");
+        super(NOT_FOUND, "Member not found.");
     }
 }

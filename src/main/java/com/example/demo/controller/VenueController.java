@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.MemberDTO;
+import com.example.demo.model.Member;
 import com.example.demo.model.Venue;
 import com.example.demo.dto.VenueDTO;
 import com.example.demo.service.VenueService;
@@ -38,6 +40,13 @@ public class VenueController {
         Venue venue = venueService.getVenueById(id);
 
         return addLinks(venue);
+    }
+
+    @GetMapping("/{id}/members")
+    public List<MemberDTO> getMembers(@PathVariable long id) {
+        List<Member> venueMembers = venueService.getVenueMembers(id);
+
+        return venueMembers.stream().map(MemberController::addLinks).collect(Collectors.toList());
     }
 
     @PutMapping(value = "/{id}", consumes="application/json")

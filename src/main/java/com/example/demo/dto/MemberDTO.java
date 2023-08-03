@@ -1,14 +1,14 @@
 package com.example.demo.dto;
 
-import com.example.demo.model.Venue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 @Data 
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberDTO {
+public class MemberDTO extends RepresentationModel<MemberDTO> {
     private String lei;
 
     private String name;
@@ -18,4 +18,6 @@ public class MemberDTO {
     private String address;
 
     private String venueName;
+
+    private Long id;
 }
